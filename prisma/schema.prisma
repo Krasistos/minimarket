@@ -31,8 +31,8 @@ model Product {
   img_url     String?
   created_at  DateTime  @default(now())
   updated_at  DateTime  @updatedAt
-  category_id Int
-  category    Category  @relation(fields: [category_id], references: [category_id])
+  category_id Int?
+  category    Category?  @relation(fields: [category_id], references: [category_id])
   inventarLogs InventarLog[] // one product can be in multiple logs
 }
 
