@@ -60,11 +60,11 @@ export class ProductsService {
         let partsOfImgUrl = product.img_url?.split('/');
         console.log(partsOfImgUrl);
 
-        if(!partsOfImgUrl){
+        if (!partsOfImgUrl) {
             throw new Error('Img url is null or undefined');
         }
 
-        const filePath = `products/${partsOfImgUrl[partsOfImgUrl?.length-1]}`;
+        const filePath = `products/${partsOfImgUrl[partsOfImgUrl?.length - 1]}`;
         console.log("FILE PATH:" + filePath);
 
         if (filePath) {
@@ -76,7 +76,57 @@ export class ProductsService {
             return { message: 'Product and image deleted successfully' };
         }
         else {
-            throw new Error('Product and image deletion not successfull probably due to img_url being null');        }
+            throw new Error('Product and image deletion not successfull probably due to img_url being null');
+        }
+    }
+
+    async updateProduct(product_id: number,file:Express.Multer.File, data:CreateProductDto) {
+
+        const product = await this.prismaService.product.findUnique({
+            where: { product_id: product_id },
+        });
+
+        if (!product) {
+            throw new Error('Product not found');
+        }
+        let img_url = product.img_url;
+
+        let partsOfImgUrl = product.img_url?.split('/');
+        console.log(partsOfImgUrl);
+
+        if (!partsOfImgUrl) {
+            throw new Error('Img url is null or undefined');
+        }
+
+        const filePath = `products/${partsOfImgUrl[partsOfImgUrl?.length - 1]}`;
+        console.log("FILE PATH:" + filePath);
+
+        if (filePath) {
+            await this.s3Service.deleteFile(filePath);
+
+            const ext = file.originalname.split('.').pop();
+            const key = `products/${Date.now()}.${ext}`;
+            img_url = await this.s3Service.uploadFile(
+                key,
+                file.buffer,
+                file.mimetype,
+            );
+            
+            return this.prismaService.product.update({
+                where: { product_id: product_id },
+                data: {
+                    name: data.name,
+                    quantity: Number(data.quantity),
+                    price: Number(data.price),
+                    description: data.description,
+                    category_id: Number(data.category_id),
+                    img_url: img_url,
+                }
+            });
+        }
+        else{
+            throw new Error('wrong file')
+        }
     }
 
 }

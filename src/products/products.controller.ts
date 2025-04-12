@@ -9,6 +9,8 @@ import {
     UseGuards,
     Query,
     Delete,
+    Patch,
+    Param,
 } from '@nestjs/common';
 import {
     ApiTags,
@@ -70,8 +72,20 @@ export class ProductsController {
         });
     }
 
-    @Delete('by_product_id')
+    @Delete('delete_product_by_product_id')
     async deleteProduct(@Query('product_id') product_id: string) {
         return this.productsService.deleteProduct(Number(product_id));
+    }
+
+    @Patch('update_product_by_id')
+    @UseInterceptors(FileInterceptor('image'))
+    @ApiConsumes('multipart/form-data')
+    @ApiBody({ type: CreateProductDto })
+    async updateProduct(
+        @Query('product_id') product_id: string,
+        @UploadedFile() file: Express.Multer.File,
+        @Body() dto: CreateProductDto
+    ) { 
+        return this.productsService.updateProduct(Number(product_id), file, dto);
     }
 }
