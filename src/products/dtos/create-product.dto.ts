@@ -11,12 +11,11 @@ export class CreateProductDto {
   @ApiProperty()
   price: number;
 
-  @ApiProperty()
+  @ApiProperty({required:false})
   description?: string;
 
   @ApiProperty()
   category_id: number;
-
   @ApiProperty({
     type: 'string',
     format: 'binary',

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService} from '../prisma/prisma.service';
 import { CreateCategoryDto } from './dtos/create-category.dto';
 
@@ -20,6 +20,17 @@ export class CategoryService {
     }
 
     async createCategory(data: CreateCategoryDto){
-        return this.prismaService.category.create({data:{name:data.name}});
+        return this.prismaService.category.create({data:{ name:data.name} });
     }
+
+    async deleteCategory(category_id: number){
+        let category = await this.getCategoryById(category_id);
+        if(!category){
+            throw new HttpException('category not found', HttpStatus.INTERNAL_SERVER_ERROR)
+        }
+
+        return this.prismaService.category.delete({where:{category_id}});
+    }
+
+
 }

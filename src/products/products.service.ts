@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateProductDto } from './dtos/create-product.dto';
 import { S3Service } from 'src/s3/s3.service';
@@ -24,6 +24,15 @@ export class ProductsService {
     }
 
     async createProduct(file: Express.Multer.File,data: CreateProductDto) {
+        
+        let category = await this.prismaService.category.findUnique(
+            {where:{category_id:Number(data.category_id)}}
+        );
+
+        if(!category){
+            throw new Error('no category with this id');
+        }
+        
         const ext = file.originalname.split('.').pop();
         const key = `products/${Date.now()}.${ext}`;
         let img_url = await this.s3Service.uploadFile(
@@ -85,8 +94,17 @@ export class ProductsService {
             where: { product_id: product_id },
         });
 
+        let category = await this.prismaService.category.findUnique(
+            {where:{category_id:Number(data.category_id)}}
+        );
+
+        if(!category){
+            // throw new Error('no category with this id');
+            throw new HttpException('No category with this id', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
         if (!product) {
-            throw new Error('Product not found');
+            throw new HttpException(' product not found', HttpStatus.INTERNAL_SERVER_ERROR);
         }
         let img_url = product.img_url;
 
@@ -94,7 +112,7 @@ export class ProductsService {
         console.log(partsOfImgUrl);
 
         if (!partsOfImgUrl) {
-            throw new Error('Img url is null or undefined');
+            throw new HttpException('Img url is null or undefined', HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         const filePath = `products/${partsOfImgUrl[partsOfImgUrl?.length - 1]}`;
@@ -124,7 +142,7 @@ export class ProductsService {
             });
         }
         else{
-            throw new Error('wrong file')
+            throw new HttpException('wrong file', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
