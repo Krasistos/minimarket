@@ -28,14 +28,18 @@ export class ProductsService {
         );
     }
 
-    async createProduct(data: {
-        name: string;
-        quantity: number;
-        price: number;
-        description?: string;
-        category_id: number;
-        img_url: string;
-    }) {
+    async createProduct(file: Express.Multer.File,data: CreateProductDto) {
+        const ext = file.originalname.split('.').pop();
+        const key = `products/${Date.now()}.${ext}`;
+        let img_url = await this.s3Service.uploadFile(
+            key,
+            file.buffer,
+            file.mimetype,
+        );
+        if(!img_url){
+            throw new Error('the uploading was not successfull and the img_url is null');
+        }
+
         return this.prismaService.product.create({
             data: {
                 name: data.name,
@@ -43,7 +47,7 @@ export class ProductsService {
                 price: Number(data.price),
                 description: data.description,
                 category_id: Number(data.category_id),
-                img_url: data.img_url
+                img_url: img_url,
             }
         });
     }

@@ -58,18 +58,7 @@ export class ProductsController {
         @UploadedFile() file: Express.Multer.File,
         @Body() dto: CreateProductDto,
     ) {
-        const ext = file.originalname.split('.').pop();
-        const key = `products/${Date.now()}.${ext}`;
-        const img_url = await this.s3Service.uploadFile(
-            key,
-            file.buffer,
-            file.mimetype,
-        );
-
-        return this.productsService.createProduct({
-            ...dto,
-            img_url,
-        });
+        return this.productsService.createProduct( file, dto);
     }
 
     @Delete('delete_product_by_product_id')
