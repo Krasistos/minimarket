@@ -12,8 +12,12 @@ async function bootstrap() {
   const globalPrefix = 'api';
   const port = process.env.PORT || 3000;
 
-  app.enableCors(); // Important for frontend API calls
-
+  app.enableCors({
+    origin: 'http://localhost:3001', // Frontend is running on port 3001
+    methods: 'GET,POST,PUT,DELETE',  // Allowed HTTP methods
+    allowedHeaders: 'Content-Type, Authorization', // Allowed headers
+  });
+  
   const config = new DocumentBuilder()
     .setTitle('Minimarket API')
     .setDescription('API for managing products, inventory, and orders')
