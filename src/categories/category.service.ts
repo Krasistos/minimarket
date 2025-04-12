@@ -32,5 +32,18 @@ export class CategoryService {
         return this.prismaService.category.delete({where:{category_id}});
     }
 
+    async updateCategory(category_id:number,data:CreateCategoryDto){
+        let category = await this.getCategoryById(category_id);
 
+        if(!category){
+            throw new HttpException('No category with this id',HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return this.prismaService.category.update({
+            where:{category_id:category_id},
+            data:{
+                name:data.name,
+            }
+        });
+    }
 }

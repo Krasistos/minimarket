@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post, Query } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { CreateCategoryDto } from './dtos/create-category.dto';
@@ -31,5 +31,13 @@ export class CategoryController {
         @Query('category_id') category_id: string
     ){
         return this.categoryService.deleteCategory(Number(category_id));
+    }
+
+    @Patch('update_category_by_id')
+    @ApiBody({type:CreateCategoryDto})
+    async updateCategory(
+        @Query('category_id') category_id:string,
+        @Body() dto:CreateCategoryDto){
+        return this.categoryService.updateCategory(Number(category_id),dto);
     }
 }
