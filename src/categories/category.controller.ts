@@ -1,12 +1,12 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { CategoryService } from './category.service';
+import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { CreateCategoryDto } from './dtos/create-category.dto';
 
 @Controller('categories')
 export class CategoryController {
 
-    constructor(private readonly categoryService:CategoryService) {
-        
-    }
+    constructor(private readonly categoryService:CategoryService) {}
 
     @Get()
     async getCategories(){
@@ -18,5 +18,11 @@ export class CategoryController {
         @Query('category_id') category_id:string
     ){
         return this.categoryService.getCategoryById(Number(category_id));
+    }
+
+    @Post('createCategory')
+    @ApiBody({type:CreateCategoryDto})
+    async createCategory(@Body() dto:CreateCategoryDto){
+        return this.categoryService.createCategory(dto);
     }
 }
