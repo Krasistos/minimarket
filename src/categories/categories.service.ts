@@ -3,7 +3,7 @@ import { PrismaService} from '../prisma/prisma.service';
 import { CreateCategoryDto } from './dtos/create-category.dto';
 
 @Injectable()
-export class CategoryService {
+export class CategoriesService {
 
     constructor(private readonly prismaService: PrismaService) {}
 

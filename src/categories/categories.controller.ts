@@ -1,12 +1,12 @@
 import { Body, Controller, Delete, Get, Patch, Post, Query } from '@nestjs/common';
-import { CategoryService } from './category.service';
+import { CategoriesService } from './categories.service';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { CreateCategoryDto } from './dtos/create-category.dto';
 
 @Controller('categories')
-export class CategoryController {
+export class CategoriesController {
 
-    constructor(private readonly categoryService:CategoryService) {}
+    constructor(private readonly categoryService:CategoriesService) {}
 
     @Get()
     async getCategories(){
