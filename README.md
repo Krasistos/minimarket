@@ -1,104 +1,157 @@
+Minimarket Project
+Description
+This project is a Minimarket Management System built using NestJS for the backend, React for the frontend, and Supabase for the PostgreSQL database and file storage (using Supabase's S3-compatible buckets).
 
-# Project Setup and Deployment Steps
+The system manages products, inventory, orders, and logs. It uses Prisma to interact with the database and Swagger for API documentation.
 
-## Step 1: Install Dependencies
+Prerequisites
+Before starting, ensure you have the following tools installed on your system:
 
-Install all the required dependencies for your project.
+Node.js (v14 or later)
 
-```bash
-$ npm install
-```
+npm or Yarn
 
-## Step 2: Compile and Run the Project
+Docker (optional for local database setup)
 
-### Development Mode
-To run the project in development mode:
+You will also need accounts and setups for:
 
-```bash
-$ npm run start
-```
+Supabase: For the database and file storage (S3 buckets).
 
-### Watch Mode
-To run the project in watch mode (auto-reload when files change):
+AWS SDK: For integrating file storage with your NestJS backend (using Supabase's S3-compatible storage).
 
-```bash
-$ npm run start:dev
-```
+Prisma: To manage database migrations and interactions.
 
-### Production Mode
-To run the project in production mode:
+Project Structure
+Frontend: React-based UI (in the frontend/ folder).
 
-```bash
-$ npm run start:prod
-```
+Backend: NestJS API (in the root of the project).
 
-## Step 3: Run Tests
+Database: PostgreSQL (hosted on Supabase).
 
-### Unit Tests
-To run unit tests:
+Setup Instructions
+Step 1: Backend Setup
+Clone this repository:
 
-```bash
-$ npm run test
-```
+bash
+Copy
+Edit
+git clone https://github.com/krasistos/minimarket.git
+Navigate to the project folder:
 
-### End-to-End (E2E) Tests
-To run end-to-end tests:
+bash
+Copy
+Edit
+cd minimarket
+Install the backend dependencies:
 
-```bash
-$ npm run test:e2e
-```
+bash
+Copy
+Edit
+npm install
+Set up your .env file with the necessary configuration (e.g., Supabase credentials, Prisma connection details, etc.). You can find a sample .env file in the project or ask the project owner for one.
 
-### Test Coverage
-To check test coverage:
+Step 2: Prisma Setup and Database Migrations
+Make sure you have the Prisma CLI installed:
 
-```bash
-$ npm run test:cov
-```
+bash
+Copy
+Edit
+npm install @prisma/cli --save-dev
+Set up the Prisma schema in the prisma/schema.prisma file. You will need to configure the Supabase connection string in your .env file.
 
-## Step 4: Deploy to Production
+Example Prisma connection string (.env file):
 
-When you're ready to deploy your NestJS application to production, follow these key steps to ensure it runs as efficiently as possible. You can also check the [deployment documentation](https://docs.nestjs.com/deployment) for more details.
+env
+Copy
+Edit
+DATABASE_URL="postgresql://<user>:<password>@<host>:<port>/<dbname>?schema=public"
+Replace <user>, <password>, <host>, <port>, and <dbname> with the appropriate credentials for your Supabase project.
 
-### Deploy using Mau
-If you're looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com). Mau is an official platform for deploying NestJS applications on AWS. To deploy with Mau:
+Run Prisma's initial migration to create the database schema:
 
-1. Install Mau globally:
+Generate Prisma Client (if you haven't already):
 
-```bash
-$ npm install -g mau
-```
+bash
+Copy
+Edit
+npx prisma generate
+Run the migrations:
 
-2. Deploy your application:
+bash
+Copy
+Edit
+npx prisma migrate dev --name init
+This will apply the migration to your Supabase database.
 
-```bash
-$ mau deploy
-```
+After migration, your database schema will be updated based on your prisma/schema.prisma file. You can inspect the schema and run additional migrations for future changes as needed.
 
-This will simplify the deployment process and help you focus more on building features rather than managing infrastructure.
+Step 3: Frontend Setup
+Navigate to the frontend/ directory:
 
-## Step 5: Resources
+bash
+Copy
+Edit
+cd frontend
+Install the frontend dependencies:
 
-Check out the following resources to help you with your project:
+bash
+Copy
+Edit
+npm install
+To run the frontend in development mode, use:
 
-- [NestJS Documentation](https://docs.nestjs.com)
-- [NestJS Discord Channel](https://discord.gg/G7Qnnhy) for questions and support.
-- Official video [courses](https://courses.nestjs.com) for hands-on experience.
-- Deploy to AWS quickly using [NestJS Mau](https://mau.nestjs.com).
-- Visualize and interact with your application using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help? Check out [Enterprise Support](https://enterprise.nestjs.com).
-- Follow NestJS on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job or hiring? Visit the [Jobs Board](https://jobs.nestjs.com).
+bash
+Copy
+Edit
+npm start
+This will run the React app on port 3001 by default.
 
-## Step 6: Support
+Step 4: Running Both Servers
+To run both the frontend and backend on separate terminals:
 
-NestJS is an MIT-licensed open-source project that thrives thanks to the support of backers and sponsors. If you'd like to contribute, please [read more here](https://docs.nestjs.com/support).
+Frontend Terminal:
 
-## Step 7: Stay in Touch
+bash
+Copy
+Edit
+cd frontend
+npm start
+Backend Terminal:
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+bash
+Copy
+Edit
+cd minimarket
+npm run start:dev
+Now, your React app should be running on http://localhost:3001, and the NestJS backend should be running on http://localhost:3000.
 
-## Step 8: License
+Features
+Products Management: Add, update, delete, and list products with full details including quantity, price, and category.
 
-NestJS is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Inventory and Orders: Track stock availability and record orders.
+
+Logs: Keep track of sales and orders in the system.
+
+Swagger Documentation: The API is fully documented with Swagger, available at http://localhost:3000/api.
+
+Database
+This project uses PostgreSQL hosted on Supabase:
+
+Set up a Supabase account at https://supabase.com.
+
+Create a new project and configure the database credentials in the .env file of the project.
+
+Use Prisma to migrate and manage the database schema.
+
+File Storage
+This project uses Supabase S3-compatible storage for handling product images:
+
+Set up an S3 bucket in your Supabase project for storing images.
+
+Integrate the bucket with the backend by configuring the necessary environment variables for AWS SDK in the .env file.
+
+Support
+If you have any questions or need support, feel free to open an issue on the GitHub repository or contact me.
+
+License
+This project is licensed under the MIT License.
