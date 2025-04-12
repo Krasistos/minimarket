@@ -1,4 +1,3 @@
-// products.controller.ts
 import {
     Controller,
     Post,
@@ -6,25 +5,18 @@ import {
     Body,
     UploadedFile,
     UseInterceptors,
-    UseGuards,
     Query,
     Delete,
     Patch,
-    Param,
 } from '@nestjs/common';
 import {
     ApiTags,
-    ApiOperation,
     ApiConsumes,
     ApiBody,
-    ApiResponse,
-    ApiBearerAuth,
     ApiForbiddenResponse,
 } from '@nestjs/swagger';
 import { CreateProductDto } from './dtos/create-product.dto';
 import { ProductsService } from './products.service';
-import { AuthGuard } from 'src/guards/auth.guard';
-import { S3Service } from 'src/s3/s3.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Products')
@@ -32,17 +24,12 @@ import { FileInterceptor } from '@nestjs/platform-express';
 //@ApiBearerAuth()
 @ApiForbiddenResponse()
 export class ProductsController {
-    constructor(private readonly productsService: ProductsService
-        , private readonly s3Service: S3Service) { }
+    constructor(private readonly productsService: ProductsService) { }
 
     @Get()
     //  @UseGuards(AuthGuard)
     async getProducts() {
         return this.productsService.getProducts();
-    }
-    @Get('first')
-    async getFirstProduct() {
-        return this.productsService.getFirstProduct();
     }
 
     @Get('by_product_id')

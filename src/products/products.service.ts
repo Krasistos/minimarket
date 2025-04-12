@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateProductDto } from './dtos/create-product.dto';
 import { S3Service } from 'src/s3/s3.service';
-import { stringify } from 'querystring';
 
 @Injectable()
 export class ProductsService {
@@ -14,10 +13,6 @@ export class ProductsService {
 
     async getProducts() {
         return this.prismaService.product.findMany();
-    }
-
-    async getFirstProduct() {
-        return this.prismaService.product.findFirst();
     }
 
     async getProductById(product_id: number) {
