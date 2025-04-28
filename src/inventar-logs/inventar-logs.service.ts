@@ -34,6 +34,10 @@ export class InventarLogsService {
         if(data.type != 'ORDERS' && data.type != 'SELLS'){
             throw new HttpException('wrong type', HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        if( data.quantity < 1){
+            //useless transaction and cant sell or order negative
+            throw new HttpException('can\'t sell or order negative or no quantity', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
         if(data.type == 'ORDERS'){
             // the quantity of the product inside the db should increase by the given amount
@@ -69,8 +73,6 @@ export class InventarLogsService {
                 product_id:data.product_id,
                 quantity:data.quantity,
                 type:data.type,
-                created_at: new Date(),
-                updated_at: new Date(),
             }
         })
     }

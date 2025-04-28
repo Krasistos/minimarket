@@ -11,11 +11,4 @@ export class CreateInventarLogDto {
 
     @ApiProperty({ enum: LogType, description: 'Type of log: ORDERS or SELLS' })
     type: LogType;
-
-    @ApiProperty()
-    created_at: Date; // Date and time when the log was created
-
-    @ApiProperty()
-    updated_at: Date; // Date and time when the log was last updated
-
 }
