@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .  # Build the backend from the root directory
+    ports:
+      - "3000:3000"  # Expose backend port
+    env_file:
+      - .env
+    networks:
+      - minimarket-network
+
+  frontend:
+    build:
+      context: ./frontend  # Build the frontend from the /frontend directory
+    ports:
+      - "3001:3001"  # Expose frontend port
+    env_file:
+      - .env
+    networks:
+      - minimarket-network
+    depends_on:
+      - backend  # Ensure the backend starts before the frontend
+
+networks:
+  minimarket-network:
+    driver: bridge

@@ -13,7 +13,7 @@ async function bootstrap() {
   const port = process.env.PORT || 3000;
 
   app.enableCors({
-    origin: 'http://localhost:3001', // Frontend is running on port 3001
+    origin: 'http://localhost:4001', // Frontend is running on port 4001
     methods: 'GET,POST,PUT,DELETE',  // Allowed HTTP methods
     allowedHeaders: 'Content-Type, Authorization', // Allowed headers
   });
